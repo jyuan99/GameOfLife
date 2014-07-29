@@ -5,7 +5,7 @@ boolean[][] board = new boolean[cols][rows];
 boolean[][] temp = new boolean[cols][rows];
 
 void setup() {
-  size(270, 270);
+  size(271, 271);
   background(255);
   for (int i = 0; i < cols; i++) {
     for (int j = 0; j < rows; j++) {
