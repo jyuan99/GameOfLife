@@ -29,12 +29,6 @@ void setup() {
 }
 
 void draw() {
-  fill(255, 0, 0);
-  noStroke();
-  rect(100, 755, 300, 40, 5);
-  fill(0);
-  text("PAUSE", 125, 335);
-
   
   if (mousePressed && mouseY < 501){
     if (state1 == 0){
@@ -86,9 +80,17 @@ void draw() {
   
   print("\n");
   
-  if (mousePressed && mouseY > 301){
+  if (mousePressed && mouseY > 751 && mouseX > 250 && mouseX < 550){
     if (state2 == 0){
       pause = !pause;
+      fill(255);
+      rect(250, 755, 300, 35);
+      fill(0, 255, 0);
+      noStroke();
+      rect(250, 755, 300, 35, 5);
+      fill(0);
+      textSize(24);
+      text("PLAY", 365, 782);
       state2 = 1;
     }
   }
@@ -97,6 +99,12 @@ void draw() {
   }
   
   if (!pause){
+    fill(255, 0, 0);
+    noStroke();
+    rect(250, 755, 300, 35, 5);
+    fill(0);
+    textSize(24);
+    text("PAUSE", 360, 782);
     update_world();
   }
   
