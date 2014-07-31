@@ -10,22 +10,20 @@ Rules:
   4. exactly 3 neighbors: new cell spawns  
 */
 
-int cols = 30;
-int rows = 30;
-int state = 0;
+int cols = 75;
+int rows = 75;
+int state1 = 0, state2 = 0;
 boolean[][] board = new boolean[cols][rows];
-boolean[][] temp = new boolean[cols][rows];
 int tempsum;
 int count;
-boolean run = true;
+boolean pause = false;
 
 void setup() {
-  size(302, 500);
   background(255);
+  size(761, 800);
   for (int i = 0; i < cols; i++) {
     for (int j = 0; j < rows; j++) {
       board[i][j] = false;
-      temp[i][j] = false;
     }
   }
 }
@@ -33,34 +31,26 @@ void setup() {
 void draw() {
   fill(255, 0, 0);
   noStroke();
-  rect(50, 450, 200, 20, 5);
-  if (mousePressed && mouseY > 301){
-    if (state == 0){
-      run = !run;
-      state = 1;
+  rect(100, 755, 300, 40, 5);
+  fill(0);
+  text("PAUSE", 125, 335);
+
+  
+  if (mousePressed && mouseY < 501){
+    if (state1 == 0){
+      board[(int) mouseX / 10][(int) mouseY / 10] = !board[(int) mouseX / 10][(int) mouseY / 10];
+      state1 = 1;
     }
   }
   else{
-    state = 0;
-  }
-  if (!run){
-    text("PAUSE", 280, 450);
+    state1 = 0;
   }
   
-  if (mousePressed && mouseY < 301){
-    if (state == 0){
-      board[mouseX / 10][mouseY / 10] = !board[mouseX / 10][mouseY / 10];
-      state = 1;
-    }
-  }
-  else{
-    state = 0;
-  }
-  
+
   for (int i = 0; i < cols; i++) {
     for (int j = 0; j < rows; j++) {
       stroke(255);
-      if (board[i][j] == true){
+      if (board[i][j]){
         fill(0);
       }
       else{
@@ -68,39 +58,48 @@ void draw() {
       }
       rect(i * 10, j * 10, 10, 10);
       
-      if (board[i][j] == true){
+      if (board[i][j]){
         print("1");
       }
-      else if (board[i][j] == false){
+      else if (!board[i][j]){
         print("0");
       }
         
-        
-
-      count = neighborcount(i, j);
-        
-      if (count < 2){
-        temp[i][j] = false;
-      }
-      else if (count > 3){
-        temp[i][j] = false;
-      }
-      else if (count == 3 && !board[i][j]){
-        temp[i][j] = true;
-      }
-      else{
-        temp[i][j] = true;
-      }        
+//      if (!run){
+//        count = neighborcount(i, j);
+//          
+//        if (count < 2){
+//          temp[i][j] = false;
+//        }
+//        else if (count > 3){
+//          temp[i][j] = false;
+//        }
+//        else if (count == 3 && !board[i][j]){
+//          temp[i][j] = true;
+//        }
+//        else{
+//          temp[i][j] = true;
+//        }
+//      }
     }
   }
   
   print("\n");
   
-  for (int i = 0; i < cols; i++) {
-    for (int j = 0; j < rows; j++) {
-      board[i][j] = temp[i][j];
+  if (mousePressed && mouseY > 301){
+    if (state2 == 0){
+      pause = !pause;
+      state2 = 1;
     }
   }
+  else{
+    state2 = 0;
+  }
+  
+  if (!pause){
+    update_world();
+  }
+  
 }
 
 boolean retrieve_state(int x, int y) {
@@ -116,30 +115,54 @@ boolean retrieve_state(int x, int y) {
   }
 }
 
-int neighborcount(int i, int j) {
+void update_world() {
+  boolean[][] temp = new boolean[cols][rows];
+  for (int i = 0; i < cols; i++){
+    for (int j = 0; j < rows; j++){
+      temp[i][j] = update_cell(i, j);
+    }
+  }
+  board = temp;
+}
+
+boolean update_cell(int x, int y) {
+  int count = neighborcount(x, y);
+  if (count < 2){
+    return false;
+  }
+  else if (count > 3){
+    return false;
+  }
+  else if (count == 3){
+    return true;
+  }
+  return board[x][y];
+}
+
+int neighborcount(int x, int y) {
   int neighborcount = 0;
-  if (retrieve_state(i - 1, j - 1)){
+  if (retrieve_state(x - 1, y - 1)){
     neighborcount++;
   }
-  if (retrieve_state(i + 0, j - 1)){
+  if (retrieve_state(x + 0, y - 1)){
     neighborcount++;
   }
-  if (retrieve_state(i + 1, j - 1)){
+  if (retrieve_state(x + 1, y - 1)){
     neighborcount++;
   }
-  if (retrieve_state(i - 1, j + 0)){
+  if (retrieve_state(x - 1, y + 0)){
     neighborcount++;
   }
-  if (retrieve_state(i + 1, j + 0)){
+  if (retrieve_state(x + 1, y + 0)){
     neighborcount++;
   }
-  if (retrieve_state(i - 1, j + 1)){
+  if (retrieve_state(x - 1, y + 1)){
     neighborcount++;
   }
-  if (retrieve_state(i + 0, j + 1)){
+  if (retrieve_state(x + 0, y + 1)){
     neighborcount++;
   }
-  if (retrieve_state(i + 1, j + 1)){
+  if (retrieve_state(x + 1, y + 1)){
     neighborcount++;
   }
   return neighborcount;
