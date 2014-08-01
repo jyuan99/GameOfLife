@@ -10,7 +10,7 @@ Rules:
 
 int cols = 75;
 int rows = 75;
-int state1 = 0, state2 = 0;
+int state1 = 0, state2 = 0, state3 = 0, state4 = 0;
 boolean[][] board = new boolean[cols][rows];
 int tempsum;
 int count;
@@ -28,7 +28,7 @@ void setup() {
 
 void draw() {
   
-  if (mousePressed && mouseY < 501){
+  if (mousePressed && mouseY < 751){
     if (state1 == 0){
       board[(int) mouseX / 10][(int) mouseY / 10] = !board[(int) mouseX / 10][(int) mouseY / 10];
       state1 = 1;
@@ -50,12 +50,13 @@ void draw() {
       }
       rect(i * 10, j * 10, 10, 10);
       
-      if (board[i][j]){
-        print("1");
-      }
-      else if (!board[i][j]){
-        print("0");
-      }
+      //prints 2D array
+//      if (board[i][j]){
+//        print("1");
+//      }
+//      else if (!board[i][j]){
+//        print("0");
+//      }
         
 //      if (!run){
 //        count = neighborcount(i, j);
@@ -78,17 +79,17 @@ void draw() {
   
   print("\n");
   
-  if (mousePressed && mouseY > 751 && mouseX > 250 && mouseX < 550){
+  if ((mousePressed && mouseY > 751 && mouseX > 200 && mouseX < 300) || (keyPressed && keyCode == 32)){
     if (state2 == 0){
       pause = !pause;
       fill(255);
-      rect(250, 755, 300, 35);
+      rect(200, 755, 100, 35);
       fill(0, 255, 0);
       noStroke();
-      rect(250, 755, 300, 35, 5);
+      rect(200, 755, 100, 35, 10);
       fill(0);
       textSize(24);
-      text("PLAY", 365, 782);
+      text("PLAY", 223, 782);
       state2 = 1;
     }
   }
@@ -96,20 +97,67 @@ void draw() {
     state2 = 0;
   }
   
+  
+  if (mousePressed && mouseY > 751 && mouseX > 325 && mouseX < 475){
+    if (state3 == 0){
+      for (int i = 0; i < cols; i++) {
+        for (int j = 0; j < rows; j++) {
+          int random = int(random(0, 2));
+          if (random == 0){
+            board[i][j] = false;
+          }
+          else if (random == 1){
+            board[i][j] = true;
+          }
+        }
+      }
+      state3 = 1;
+    }
+  }
+  else{
+    state3 = 0;
+  }
+  
+  if (mousePressed && mouseY > 751 && mouseX > 500 && mouseX < 600){
+    if (state4 == 0){
+      for (int i = 0; i < cols; i++) {
+        for (int j = 0; j < rows; j++) {
+          board[i][j] = false;
+        }
+      }
+      state4 = 1;
+    }
+  }
+  else{
+    state4 = 0;
+  }
+  
   if (!pause){
     fill(255, 0, 0);
     noStroke();
-    rect(250, 755, 300, 35, 5);
-    fill(0);
+    rect(200, 755, 100, 35, 10);
+    fill(255);
     textSize(24);
-    text("PAUSE", 360, 782);
+    text("PAUSE", 215, 782);
+    
+    fill(0, 0, 255);
+    noStroke();
+    rect(325, 755, 150, 35, 10);
+    fill(255);
+    text("RANDOMIZE", 329, 782);
+    
+    fill(255, 0, 0);
+    noStroke();
+    rect(500, 755, 100, 35, 10);
+    fill(255);
+    text("CLEAR", 513, 782);
     update_world();
   }
   
 }
 
 boolean retrieve_state(int x, int y) {
-  // Retrive matrix cell value with overflow/underflow detection
+  // Retrieve matrix cell value with overflow/underflow detection
   if (x < 0 || x >= cols || y < 0 || y >= rows){
     return false;
   }
